@@ -10,9 +10,9 @@
 #include <time.h>
 #include <wait.h>
 
-//3e
+//3c
 //caesar cipher adaptasi dari https://www.thecrazyprogrammer.com/2016/11/caesar-cipher-c-c-encryption-decryption.html
-void caesar(char message[], int key)
+void caesar(char message[])
 {
     char ch;
     for (int i = 0; message[i] != '\0'; ++i)
@@ -20,7 +20,7 @@ void caesar(char message[], int key)
         ch = message[i];
         if (ch >= 'a' && ch <= 'z')
         {
-            ch = ch + key;
+            ch = ch + 5;
             if (ch > 'z')
             {
                 ch = ch - 'z' + 'a' - 1;
@@ -29,7 +29,7 @@ void caesar(char message[], int key)
         }
         else if (ch >= 'A' && ch <= 'Z')
         {
-            ch = ch + key;
+            ch = ch + 5;
             if (ch > 'Z')
             {
                 ch = ch - 'Z' + 'A' - 1;
