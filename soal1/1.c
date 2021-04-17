@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <time.h>
 
+
 void unduh(){
 
 pid_t anak_a, anak_b, anak_c;
@@ -49,24 +50,18 @@ else {
 
 int main() {
 
-pid_t anak_1, anak_2, anak_3, anak_4, anak_5, anak_6;
-        int status;
+   pid_t idchild = fork();
+if (idchild == 0) {
+  char *valueargu[] = {"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
+  execv("/bin/mkdir", valueargu);
+}
+while(wait(NULL) != idchild);
 
-
-        anak_1 = fork();
-        if(anak_1 < 0){
-            exit(EXIT_FAILURE);}
-
-        if(anak_1==0) {
-            char *argv[]={"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
-            execv("/bin/mkdir", argv);}
-        else {
-            while((wait(&status)) > 0);
-            anak_2 = fork();
-                }
-        if(anak_2<0) {
-            exit(EXIT_FAILURE);
-            }
-        if(anak_2==0) {
-            unduh();}
+idchild = fork();
+if (idchild == 0) {
+  unduh();
+}
+    
+        
+  
 }
