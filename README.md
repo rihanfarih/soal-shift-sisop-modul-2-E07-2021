@@ -142,3 +142,199 @@ else if(bday_mon == month && bday_day == day && bday_minute == minute && bday_ho
 ### Soal 2
 
 ### Soal 3
+#### 3a
+Membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp **YYYY-mm-dd_HH:ii:ss**
+
+pertama untuk mebuat direktori, kami menggunakan fungsi `buatFolder` membuat folder dengan memanggil mkdir menggunakan execv
+```
+void buatFolder(char namafolder[])
+{
+    pid_t pid;
+    pid = fork();
+
+    int status;
+    if(pid == 0)
+    {
+        char *argv[] = {"mkdir","-p", namafolder, NULL};
+        execv("/bin/mkdir",argv);
+    }
+    
+    while ((wait(&status)) > 0);
+}
+```
+lalu agar direktori dapat dibuat setiap selama 40 detik maka menggunakan sleep(40) di fungsi main dan menamai direktori dengan "%Y-%m-%d_%H:%M:%S" kita gunakan:
+```
+while(1)
+        {
+            time_t t = time(NULL);
+            struct tm curTime = *localtime(&t);
+            char namafolder[100];
+            clock_t start = time(NULL), end;
+
+            if(fork() == 0)
+            {
+                //soal 3A Membuat folder berdasarkan timestamp [YYYY-MM-dd_hh:mm:ss] per 40 detik
+                strftime(namafolder, sizeof(namafolder),"%Y-%m-%d_%H:%M:%S",&curTime);
+                buatFolder(namafolder); //fungsi 3b
+                download(namafolder);//fungsi 3c
+                successStat(namafolder);// fungsi 3d
+                zipFile(namafolder);
+                exit(EXIT_SUCCESS);
+            }
+
+            sleep(40);
+        }
+    }
+}
+```
+#### 3b
+Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
+
+kita gunakan fungsi perulangan serta sleep untuk melakukan download dimana pada fungsi download sebanyak 10 gambar dengan melakukan looping dan setiap 5 detik sekali dengan memakai fungsi sleep(5)
+```
+void download(char namafolder[])
+{
+    pid_t pid;
+    int status;
+    int i = 0;
+
+    for(i ; i<10 ; i++) //looping download sebanyak 10 gambar
+    {
+        pid = fork();
+
+        time_t t = time(NULL);
+        struct tm curTime = *localtime(&t);
+        char namafile[100];
+        clock_t start = time(NULL), end;
+        strftime(namafile, sizeof(namafile),"%Y-%m-%d_%H:%M:%S",&curTime); // dahulu format penamaan hasil download dengan mengambil waktu ketika melakukan proses download
+
+        if(pid == 0)
+        {
+            char source[50] = "https://picsum.photos/";  
+            char size[20];
+            sprintf(size,"%ld",t%1000+50); //ukuran foto sesuai permintaan soal
+            strcat(source,size);
+
+            char savefile[300];
+            sprintf(savefile, "/home/rihan/Desktop/Sisop/Praktikum 2/soal3/%s/%s.jpeg", namafolder, namafile); //savean file
+
+            char *argv[] = {"wget","-q",source, "-O", savefile, NULL};
+            execv("/bin/wget",argv);
+        }
+        
+        sleep(5); // untuk 5 detik sekali
+
+    }
+}
+```
+Untuk mendownload gambar dengan nama format timestamp juga caranya sama seperti soal bagian a.
+Untuk menjadikan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix, 
+kami menggunakan sprintf yang sebelumnya n sudah mengambil waktu local terlebih dahulu.
+
+#### 3c
+Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
+
+pertama Membuat file status.txt pada fungsi succecStat 
+```
+void successStat(char namafolder[])
+{
+    char pesan[20] = "Download Success", ch;
+    int i,key = 5;
+  ```
+  
+  lalu melakukan enkripsi caesar chiper dimana Untuk melakukan enkripsi caesar cipher shift 5, dapat dilakukan dengan menambah 5 pada ASCII setiap karakter. 
+    Namun, perlu diperhatikan apabila ketika ASCII karakter ditambah 5 sudah melebihi 'z', 
+    karakter tersebut harus diputar lagi kembali ke 'a'*/
+    
+ ```
+ for(i = 0; pesan[i] != '\0'; ++i)
+    {
+		ch = pesan[i];
+		if(ch >= 'a' && ch <= 'z'){
+			ch = ch + key;
+			if(ch > 'z')	ch = ch - 'z' + 'a' - 1;
+			pesan[i] = ch;
+		}
+		else if(ch >= 'A' && ch <= 'Z'){
+			ch = ch + key;
+			if(ch > 'Z')	ch = ch - 'Z' + 'A' - 1;
+			pesan[i] = ch;
+		}
+	}
+ ```
+ setelah itu memasukan hasil chiper yang sudah dibuat sebelumnya, kami menggunakan kode sebagai berikut. dimana program akan membuat file yang bernama `status.txt` yang isinya adalah hasil dari chiper text diatas (denganfputs)
+ ```
+ har path[112]; //e
+    sprintf(path, "%s/status.txt", namafolder);    
+    FILE *fptr = fopen(path, "w");
+    fputs(pesan, fptr);
+    fclose(fptr);
+}
+```
+terakhir fungsi untuk melakukan zip (kemudian untuk melakukan zip pada direktori yang telah selesai dengan menggunkan fungsi zipFile)
+```
+void zipFile(char namafolder[]) 
+{
+    pid_t pid;
+    pid = fork();
+    int status;
+
+    if(pid == 0)
+    {
+        char zip_path[150]; sprintf(zip_path, "%s.zip", namafolder);
+        char *argv[] = {"zip", "-qrm", zip_path, namafolder, NULL};
+        execv("/bin/zip", argv);
+    }
+
+    while(wait(&status) > 0);
+}
+```
+####3d
+Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin program tersebut akan men-generate sebuah program “Killer” yang executable, dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai sesuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat nantinya harus merupakan program bash.
+
+Membuat program Killer.sh pada fungsi fileKill
+```
+void fileKill(const char *argv[],int sid)
+{
+    FILE *fptr;
+    fptr = fopen("killer.sh","w");
+    fputs("#!/bin/bash\n\n",fptr);
+    char program[100];
+```
+
+#### 3e
+Untuk mengaktifkan mode pertama, program harus dijalankan dengan argumen -z, dan Ketika dijalankan dalam mode pertama, program utama akan langsung menghentikan semua operasinya Ketika program Killer dijalankan. Sedangkan untuk mengaktifkan mode kedua, program harus dijalankan dengan argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori).
+
+pertama pada fungsi main menginisialisaikan program bisa berjalan dengan argumen -z dan -x
+```
+ if(!strcmp(argv[1],"-z") || !strcmp(argv[1],"-x"))
+    {
+        fileKill(argv, (int)parentPID);
+```
+ lalu memasukkan source code dimana Apabila -z akan memasukkan string killall -9 soal3 untuk mematikan seluruh proses
+untuk -x akan memasukkan string kill -9 %d dimana %d adalah pid untuk mematikan proses utama. Sehingga apabila -x dijalankan, 
+program akan menyelesaikan proses terakhir, baru kemudian berhenti.*/
+```
+ if(!strcmp(argv[1],"-z"))
+    {
+        sprintf(program,"killall -9 %s\nrm killer.sh",argv[0]);
+        fputs(program,fptr);
+    }
+    else if (!strcmp(argv[1],"-x"))
+    {
+        sprintf(program,"kill -9 %d\nrm killer.sh",sid);
+        fputs(program,fptr);
+    }
+
+    fclose(fptr);
+}
+```
+
+#### kendala pengerjaan
+
+
+        
+
+    
+
+
