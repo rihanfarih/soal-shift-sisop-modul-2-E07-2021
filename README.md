@@ -289,7 +289,7 @@ void zipFile(char namafolder[])
     while(wait(&status) > 0);
 }
 ```
-####3d
+#### 3d
 Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin program tersebut akan men-generate sebuah program “Killer” yang executable, dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai sesuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat nantinya harus merupakan program bash.
 
 Membuat program Killer.sh pada fungsi fileKill
@@ -331,6 +331,18 @@ program akan menyelesaikan proses terakhir, baru kemudian berhenti.*/
 ```
 
 #### kendala pengerjaan
+* Tingkat kesulitan soal meningkat sedikit pesat 
+* Banyak fungsi yang belum pernah dicoba sehingga kesulitan saat pengerjaan
+* pada run/compile pertama muncul error segmentation fault (core dumped)
+![nomor3error](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/error3.jpg)
+
+#### Screenshoot hasil
+* hasil pengerjaan
+![nomor3](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/tiga3.jpg)
+* File zip yang berisi 10 foto dan status.txt
+![nomor3-1](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/tiga2.jpg)
+* Isi status.txt, berisi pesan Download Success yang telah dienkripsi
+![nomor3-2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/tiga1.jpg)
 
 
         
