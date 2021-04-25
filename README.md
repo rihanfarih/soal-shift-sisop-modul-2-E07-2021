@@ -111,6 +111,7 @@ time_t now = time(NULL);
                 ... menjalankan 1a, 1b, 1c, 1d ...
             }
 ```
+![nomor1e](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/1e.png)
 ##### 1f.
 Pada 1f diminta untuk pada waktu ulang tahunnya Stevany, semua folder akan di zip dengan nama Lopyu_Stevany.zip dan semua folder akan di delete(sehingga hanya
 menyisakan .zip). 
@@ -128,8 +129,14 @@ char *argv[] = {"zip", "-q", "-r", "-m", "Lopyu_Stevanny.zip", folder_stevanny[i
 else if(bday_mon == month && bday_day == day && bday_minute == minute && bday_hour == hour)
 ...
 ```
+![nomor1f](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/1f.png)
 ##### Kendala Pengerjaan:
-* Masih sedikit bingung untuk menggunakan fork dalam satu fungsi di main
+* Masih sedikit bingung untuk menggunakan fork dalam satu fungsi di main dan saat dicoba didalam satu main function terdapat banyak error
+* Terjadi error saat melakukan testing daemonnya
+* Beberapa kali error saat mensetting localtime nya karna belum tau cara mensetting local time
+* Beberapa kali error saat membuat argv di fork dan exec nya
+* Tingkat kesulitan soal meningkat sedikit pesat 
+* Banyak fungsi yang belum pernah diketahui jadi banyak terjadi error/ kadang fungsi tidak berhasil dieksekusi  
     
 
 ### Soal 2
