@@ -28,7 +28,7 @@ menyisakan .zip).
 Kemudian Steven meminta bantuanmu yang memang sudah jago sisop untuk membantunya
 mendapatkan hati Stevany. Bantu Woy!!
 
- * Note:
+ ** Note: **
  * ● Ulang Tahun Stevany : 09 April Pukul 22.22 WIB
  * ● Semua poin dijalankan oleh 1 script di latar belakang, termasuk mendownload file
 zip-nya. Jadi cukup jalankan script 1x serta ubah time dan date untuk check hasilnya.
