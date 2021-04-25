@@ -368,6 +368,13 @@ Bingung harus menggunakan fungsi apa dan bagaimana
 Tidak tau harus menggunakan fungsi variatif yang tidak ada di modul seperti dirent.h dan lain lain
 
 ###Screenshot hasil pengerjaan
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-18-54.png)
+
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-19-00.png)
+
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-19-04.png)
+
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-20-34.png)
 
 ### Soal 3
 #### 3a
