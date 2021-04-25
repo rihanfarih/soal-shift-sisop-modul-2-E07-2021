@@ -144,7 +144,7 @@ else if(bday_mon == month && bday_day == day && bday_minute == minute && bday_ho
 Loba bekerja di sebuah petshop terkenal, suatu saat dia mendapatkan zip yang berisi banyak sekali foto peliharaan dan Ia diperintahkan untuk mengkategorikan foto-foto peliharaan tersebut. Loba merasa kesusahan melakukan pekerjaanya secara manual, apalagi ada kemungkinan ia akan diperintahkan untuk melakukan hal yang sama. Kamu adalah teman baik Loba dan Ia meminta bantuanmu untuk membantu pekerjaannya.
 
 ##### 2a.
-program mengekstrak zip yang diberikan ke /home/user/modul2/petshop dan menghapus folder yang tidak dibutuhkan
+Pertama-tama program perlu mengextract zip yang diberikan ke dalam folder “/home/[user]/modul2/petshop”. Karena bos Loba teledor, dalam zip tersebut bisa berisi folder-folder yang tidak penting, maka program harus bisa membedakan file dan folder sehingga dapat memproses file yang seharusnya dikerjakan dan menghapus folder-folder yang tidak dibutuhkan.
 
 ```
 void ekstrak()
@@ -197,12 +197,177 @@ void tunda(char perintah[],char *argv[])
 fungsi tunda adalah untuk melaksanakan perintah namun menunggu childnya selesai sehingga program dapat dilaksanakan dengan runtut dan tidak tumpang tindih. Kemudian fungsi ekstrak untuk mengunzip file zip yang diberikan dengan menggunakan perintah tunda untuk mengeksekusi argumen yang diberikan. Argumen tersebut adalah untuk mengekstrak file petshop.zip yang terdapat pada direktori Downloads ke direktori /home/user/modul2/petshop. Namun, sebelum melakukan ekstrak program harus membuat folder dengan menggunakan argumen mkdir pada program dan menggunakan fork agar tidak tumpang tindih.
 
 ##### 2b.
+Foto peliharaan perlu dikategorikan sesuai jenis peliharaan, maka kamu harus membuat folder untuk setiap jenis peliharaan yang ada dalam zip. Karena kamu tidak mungkin memeriksa satu-persatu, maka program harus membuatkan folder-folder yang dibutuhkan sesuai dengan isi zip. Contoh: Jenis peliharaan kucing akan disimpan dalam “/petshop/cat”, jenis peliharaan kura-kura akan disimpan dalam “/petshop/turtle”.
+
+```
+void buatfolder()
+{
+    pid_t child_id;
+    child_id = fork();
+    int status;
+    if(child_id<0)
+    {
+       exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti 
+    }
+
+    if (child_id==0)
+    {
+    DIR *dp;
+    char path[100] = "/home/nizar/modul2/petshop";
+    dp = opendir(path);
+        if (dp != NULL)
+        {
+            struct dirent *ep;
+            while((ep = readdir(dp))!= NULL)
+            {   
+                if(ep->d_type == DT_REG)
+                {
+                    char *temp1,*temp2,*temp3,*temp4;
+                    char *namafile=ep->d_name;
+                    char *namabaru=potong(namafile);
+                    
+                    char copy1[100], copy2[100], copy3[100];
+                    char base2[100], base3[100];
+                    
+                    for(temp1=strtok_r(namabaru,"_",&temp3); temp1!=NULL; temp1=strtok_r(NULL,"_",&temp3))
+                    {
+                        char hewan[100], nama[100], umur[100];
+                        int ket=0;
+                        char base[100]="/home/nizar/modul2/petshop/";
+                        
+                        strcpy(copy1, ep->d_name);
+                        strcpy(base2, base);
+                        strcpy(base3, base);
+                        strcpy(copy2, ep->d_name);
+                        strcpy(copy3, ep->d_name);
+
+                        for(temp2=strtok_r(temp1,";",&temp4); temp2!=NULL; temp2=strtok_r(NULL,";",&temp4))
+                            {
+                                if(ket==0) strcpy(hewan,temp2);
+                                if(ket==1) strcpy(nama,temp2);
+                                if(ket==2) strcpy(umur,temp2);
+                                ket=ket+1;
+                            }
+                        
+
+                        //2b
+                        strcat(base,hewan);
+                        char *argmk[]={"mkdir","-p",base,NULL};
+                        tunda("/bin/mkdir",argmk);
+```
+Dengan menggunakan fungsi yang ada di dirent.h, kita menggunakan DIR untuk membuka directory dan struct dirent untuk mmebaca list folder yang ada di direktori yang ditunjuk. Kemudian dengan menggunakan fungsi tersebut sebagai parameter pada fungsi, diambil string pertama sebelum tanda ; dimana string tersebut merupakan jenis hewan dan diguakan untuk folder. Kemudian di akhir nanti menggunakan argumen dan fungsi tunda untuk membuat direktori sesuai dengan jenis nama hewan yang telah dibaca tadi.
 
 ##### 2c.
+Setelah folder kategori berhasil dibuat, programmu akan memindahkan foto ke folder dengan kategori yang sesuai dan di rename dengan nama peliharaan.
+Contoh: “/petshop/cat/joni.jpg”.
+
+```
+//2c
+//memindahkan ke folder
+  strcat(nama,".jpg");
+  strcat(base2,copy2);
+                        
+  char *pindah[]={"cp","-r", base2, base, NULL};
+  tunda("/bin/cp",pindah);
+
+//merubah nama
+  strcpy(base3,base);
+  strcat(base3,"/");
+  strcat(base3,copy2);
+  strcat(base,"/");
+  strcat(base,nama);
+  char *rename[]={"mv",base3,base,NULL};
+  tunda("/bin/mv",rename);
+  
+char* potong (char* s){
+    int n, i;
+    char* new;
+    for (i = 0; s[i] != '\0'; i++);
+    // panjang string baru
+    n = i - 4 + 1;
+    if (n < 1)
+        return NULL;
+    new = (char*) malloc (n * sizeof(char));
+    for (i = 0; i < n - 1; i++)
+        new[i] = s[i];
+    new[i] = '\0';
+    return new;
+}
+```
+di sini gabungkan string yang diambil dengan jpg karena pada fungsi sebelumya terjadi pemotongan format file untuk scanning dan membuat base2 menjadi alamat tujuan. Setelah itu dengan menggunakan fungsi tunda untuk execute dipindahkan dengan menggunakan cp untuk mencopy. Lalu ubah namanya menjadi nama.jpg pada proses rename menggunakan fungsi mv. fungsi potong tadi digunakan untuk memotong jpg untuk menscan list file yang ada di direktori.
 
 ##### 2d.
+Karena dalam satu foto bisa terdapat lebih dari satu peliharaan maka foto harus di pindah ke masing-masing kategori yang sesuai. Contoh: foto dengan nama “dog;baro;1_cat;joni;2.jpg” dipindah ke folder “/petshop/cat/joni.jpg” dan “/petshop/dog/baro.jpg”.
 
-##### 2d.
+```
+ if(ep->d_type == DT_REG)
+                {
+                    char *temp1,*temp2,*temp3,*temp4;
+                    char *namafile=ep->d_name;
+                    char *namabaru=potong(namafile);
+                    
+                    char copy1[100], copy2[100], copy3[100];
+                    char base2[100], base3[100];
+                    
+                    for(temp1=strtok_r(namabaru,"_",&temp3); temp1!=NULL; temp1=strtok_r(NULL,"_",&temp3))
+                    {
+                        char hewan[100], nama[100], umur[100];
+                        int ket=0;
+                        char base[100]="/home/nizar/modul2/petshop/";
+                        
+                        strcpy(copy1, ep->d_name);
+                        strcpy(base2, base);
+                        strcpy(base3, base);
+                        strcpy(copy2, ep->d_name);
+                        strcpy(copy3, ep->d_name);
+
+                        for(temp2=strtok_r(temp1,";",&temp4); temp2!=NULL; temp2=strtok_r(NULL,";",&temp4))
+                            {
+                                if(ket==0) strcpy(hewan,temp2);
+                                if(ket==1) strcpy(nama,temp2);
+                                if(ket==2) strcpy(umur,temp2);
+                                ket=ket+1;
+                            }
+```
+pada for pertama digunakan untuk memotong nama file string setiap bertemu dengan _ dan di for kedua digunakan untuk memoting nama file string setiap bertemu dengan ; dengan menggunakan fungsi strtok_r dari direktori awal, parameter, dan tempat alamat untuk menyimpan.
+
+##### 2e.
+Di setiap folder buatlah sebuah file "keterangan.txt" yang berisi nama dan umur semua peliharaan dalam folder tersebut
+
+```
+//2e sementara
+                 char txtloc[100],txtpath[100];
+                 strcpy(txtloc,base);
+                 stpcpy(txtpath,txtloc);
+//2e
+                 strcat(txtpath,"/keterangan.txt");
+                 strcpy(isi,"nama : ");
+                 strcat(isi,namaditxt);
+                 strcat(isi,"\n");
+                 strcat(isi,"umur : ");
+                 strcat(isi,umur);
+                 strcat(isi,"tahun\n\n");
+                 FILE *fptr=fopen(txtpath,"a");
+                 fputs(isi,fptr);
+                 fclose(fptr);
+//menghapus file yang telah dipindah
+                if(ep->d_type == DT_REG)
+                {
+                    char base[99]="/home/nizar/modul2/petshop/";
+                    strcat(base,ep->d_name);
+
+                    char *hapus[]={"rm","-rf",base,NULL};
+                    tunda("/bin/rm",hapus);
+                }
+```
+pada string txtpath, digunakan untuk alamat keterangan.txt Selain itu string isi berisi konten yang akan dipush ke file keterangan dimana terdapat rangkaian proses untuk strcat untuk menginput nama dan juga umur hewan. Lalu string isi dipush ke txtpath menggunakan "a" agar string yang lama tidak dihapus. Setelah serangkaian proses dijalankan hal yang terakhir dilakukan adalah menghapus file foto yang telah diproses.
+
+###Kendala selama pengerjaan
+Kesulitan dalam memahami maksud soal
+Bingung harus menggunakan fungsi apa dan bagaimana
+Tidak tau harus menggunakan fungsi variatif yang tidak ada di modul seperti dirent.h dan lain lain
+
+###Screenshot hasil pengerjaan
 
 ### Soal 3
 #### 3a
