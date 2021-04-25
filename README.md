@@ -36,9 +36,51 @@ zip-nya. Jadi cukup jalankan script 1x serta ubah time dan date untuk check hasi
 .... FORBIDDENNN!!
 * Tidak boleh pake cron !!!
 * Menggunakan fork dan exec.
+#### Jawab:
+###### 1a.
+Pada 1a. diminta untuk membuat folder  Musyik untuk mp3, Fylm untuk mp4, dan Pyoto untuk jpg dengan menggunakan __fork__ dan __exec__. Fork disini berguna untuk membuat proses baru/child proses dan setelah berhasil membuat proses baru menggunakan exec untuk menjalankan programnya yaitu __mkdir__. Kemudian setelah fork dan exec ditambahkan __wait__, yang berguna menunggu child process selesai melakukan tugasnya, yaitu membuat folder. 
+```
+void createF(int ind) {
+    pid_t child_id;
+    int status;
+    
+    child_id = fork();
+    if(child_id == 0) {
+        char *argv[] = {"mkdir", folder_stevanny[ind], NULL};
+        execv("/usr/bin/mkdir", argv);
+    }
+    while(wait(&status) > 0); 
+}
+```
+###### 1b.
+Pada 1b diminta untuk mendownload file - file .jpg, .mp3, .mp4 dari link yang yang ada. Untuk mendownload file - file tersebut kami juga menggunakan fork juga exec dengan command __wget__, seperti tips yang telah diberikan.
 
+```
+void downloadF(int ind) {
+    ...
+    if(child_id == 0) {
+        char *argv[] = {"wget", "--no-check-certificate", "-q", link_stevanny[ind], "-O", zip_stevanny[ind], NULL};
+        execv("/usr/bin/wget", argv);
+    }
+    ...
+}
+```
+###### 1c.
+Pada 1c diminta untuk meng-extract atau un-zip hasil download yang berupa Foto_for_Stefany.zip, Musik_for_Stevany.zip, Film_for_Stevany.zip. Sama seperti sebelumnya kami menggunakan exec, fork dengan command __unzip__ untuk meng-extract dan wait.
+```
+...
+char *argv[] = {"unzip", "-q", zip_stevanny[ind], NULL};
+        execv("/usr/bin/unzip", argv);
+...
+```
+###### 1d.
+Pada 1d diminta untuk memindahkan hasil extract ke dalam folder yang telah dibuat (hanya file yang dimasukkan). Kami menggunakan __find__ untuk mencari filesnya, karna find membutuhkan path untuk mencari files nya kami memasukkan path directory ke dalam string dan strcat. selanjutnya memakai __-exec mv {}__ untuk memindahkan files nya ke dalam folder yang telas dibuat.
 
+![nomor1dfylm](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/fylmc.png)
+![nomor1dmusyik](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/musyikc.png)
+![nomor1dpyoto](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/pyotoc.png)
 
+###### 1e.
 
 
 ### Soal 2
