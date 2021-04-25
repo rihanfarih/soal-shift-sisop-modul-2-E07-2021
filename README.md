@@ -141,6 +141,69 @@ else if(bday_mon == month && bday_day == day && bday_minute == minute && bday_ho
 
 ### Soal 2
 
+Loba bekerja di sebuah petshop terkenal, suatu saat dia mendapatkan zip yang berisi banyak sekali foto peliharaan dan Ia diperintahkan untuk mengkategorikan foto-foto peliharaan tersebut. Loba merasa kesusahan melakukan pekerjaanya secara manual, apalagi ada kemungkinan ia akan diperintahkan untuk melakukan hal yang sama. Kamu adalah teman baik Loba dan Ia meminta bantuanmu untuk membantu pekerjaannya.
+
+##### 2a.
+program mengekstrak zip yang diberikan ke /home/user/modul2/petshop dan menghapus folder yang tidak dibutuhkan
+
+```
+void ekstrak()
+{
+    pid_t child_id;
+    child_id = fork();
+    int status;
+    char asal[100] = "/home/nizar/Downloads/pets.zip";
+    char tujuan[100] = "/home/nizar/modul2/petshop";
+
+    if(child_id<0)
+    {
+       exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+    }
+
+    if (child_id==0)
+    {
+        char *argv[] = {"mkdir","-p",tujuan,NULL};
+        tunda("/bin/mkdir", argv);
+    }
+
+    else {
+        while ((wait(&status))>0);
+        char *argv2[] = {"unzip","-q",asal,"-x","*/*","-d",tujuan,NULL};
+        //-x berfungsi untuk exclude dimana */* untuk file folder. Sehingga folder tidak ter zip.
+        tunda("/bin/unzip", argv2);
+    }
+}
+
+void tunda(char perintah[],char *argv[])
+{
+    pid_t child_id;
+    int status;
+
+    child_id=fork();
+
+    if(child_id==0)
+    {
+        execv(perintah, argv);
+    }
+
+    else
+    {
+        while ((wait(&status))>0);
+    }
+}
+
+```
+
+fungsi tunda adalah untuk melaksanakan perintah namun menunggu childnya selesai sehingga program dapat dilaksanakan dengan runtut dan tidak tumpang tindih. Kemudian fungsi ekstrak untuk mengunzip file zip yang diberikan dengan menggunakan perintah tunda untuk mengeksekusi argumen yang diberikan. Argumen tersebut adalah untuk mengekstrak file petshop.zip yang terdapat pada direktori Downloads ke direktori /home/user/modul2/petshop. Namun, sebelum melakukan ekstrak program harus membuat folder dengan menggunakan argumen mkdir pada program dan menggunakan fork agar tidak tumpang tindih.
+
+##### 2b.
+
+##### 2c.
+
+##### 2d.
+
+##### 2d.
+
 ### Soal 3
 #### 3a
 Membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp **YYYY-mm-dd_HH:ii:ss**
