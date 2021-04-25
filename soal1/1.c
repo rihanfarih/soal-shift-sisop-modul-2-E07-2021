@@ -159,7 +159,7 @@ int main() {
         int bday_mon = 4;               
         int bday_day = 9;
         int bday_minute = 22;
-        if(bday_mon == month && bday_day == day && bday_minute-7 == minute && 16 == hour) {
+        if(bday_mon == month && bday_day == day && bday_minute == minute && bday_hour-6 == hour) {
                 // 1a make folders
                 for(int i=0; i<3; i++){
                     createF(i);
