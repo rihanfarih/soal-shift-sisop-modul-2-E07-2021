@@ -362,19 +362,20 @@ Di setiap folder buatlah sebuah file "keterangan.txt" yang berisi nama dan umur 
 ```
 pada string txtpath, digunakan untuk alamat keterangan.txt Selain itu string isi berisi konten yang akan dipush ke file keterangan dimana terdapat rangkaian proses untuk strcat untuk menginput nama dan juga umur hewan. Lalu string isi dipush ke txtpath menggunakan "a" agar string yang lama tidak dihapus. Setelah serangkaian proses dijalankan hal yang terakhir dilakukan adalah menghapus file foto yang telah diproses.
 
-###Kendala selama pengerjaan
+### Kendala selama pengerjaan
 Kesulitan dalam memahami maksud soal
 Bingung harus menggunakan fungsi apa dan bagaimana
 Tidak tau harus menggunakan fungsi variatif yang tidak ada di modul seperti dirent.h dan lain lain
 
-###Screenshot hasil pengerjaan
-![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-18-54.png)
+### Screenshot hasil pengerjaan
 
-![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-19-00.png)
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot%20from%202021-04-25%2021-18-54.png)
 
-![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-19-04.png)
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot%20from%202021-04-25%2021-19-00.png)
 
-![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot from 2021-04-25 21-20-34.png)
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot%20from%202021-04-25%2021-19-04.png)
+
+![nomor2](https://github.com/rihanfarih/soal-shift-sisop-modul-2-E07-2021/blob/main/Screenshots/Screenshot%20from%202021-04-25%2021-20-34.png)
 
 ### Soal 3
 #### 3a
